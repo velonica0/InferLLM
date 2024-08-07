@@ -161,7 +161,8 @@ TaskSet llm_matmul_compute_int4_float(
                         int vl;
                         asm volatile(
                                 "vsetvl        x0, %[sz4], %[vt32]\n"  // load q4
-                                "vlbu.v        v16,  (%[x])\n"
+                                //"vlbu.v        v16,  (%[x])\n"
+                                "vle8.v        v16,  (%[x])\n"
                                 "vand.vi       v24, v16, 0b1111\n"  // save low part
                                 "vsrl.vi       v16, v16, 4\n"
                                 "vsll.vi       v16, v16, 16\n"  // make high part
@@ -169,7 +170,8 @@ TaskSet llm_matmul_compute_int4_float(
 
                                 "vsetvl        %[vl], %[sz8], %[vt16]\n"  // load q8
                                 "vadd.vi       v16, v16, -8\n"
-                                "vlb.v         v24,  (%[y])\n"
+                                //"vlb.v         v24,  (%[y])\n"
+                                "vle8.v         v24,  (%[y])\n"
 
                                 "vmul.vv       v16, v16, v24\n"  // mul and sum
                                 "vwredsum.vs   v0, v16, v0\n"
@@ -231,8 +233,10 @@ TaskSet llm_matmul_compute_int8_float(
                         int vl;
                         asm volatile(
                                 "vsetvl        %[vl], %[sz8], %[vt16]\n"  // load q8
-                                "vlb.v         v16,  (%[x])\n"
-                                "vlb.v         v24,  (%[y])\n"
+                                // "vlb.v         v16,  (%[x])\n"
+                                // "vlb.v         v24,  (%[y])\n"
+                                "vle8.v         v16,  (%[x])\n"
+                                "vle8.v         v24,  (%[y])\n"
                                 "vmul.vv       v16, v16, v24\n"  // mul and sum
                                 "vwredsum.vs   v0, v16, v0\n"
                                 : [vl] "=r"(vl)
