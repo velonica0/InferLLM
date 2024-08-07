@@ -64,7 +64,7 @@ if (NOT ${INFER_ARCH} STREQUAL "")
   file(GLOB_RECURSE PLTSRC src/kern/optimized/${INFER_ARCH}/*)
 endif()
 
-set(CMAKE_CXX_FLAGS " -std=c++11 -pthread -Wno-multichar -fPIC ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS " -std=c++11 -pthread -pg -march=rv64gcv -Wno-multichar -fPIC ${CMAKE_CXX_FLAGS}")
 
 if(ENABLE_GPU)
   message(STATUS "Build with GPU.")
